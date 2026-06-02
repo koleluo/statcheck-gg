@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Summoner {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  level       Int      @default(1)
+  profileIcon Int      @default(1)
+  region      String   @default("NA1")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  rankedStats  RankedStats[]
+  participants MatchParticipant[]
+}
+
+model Champion {
+  id       String  @id @default(cuid())
+  riotId   String  @unique
+  name     String
+  title    String
+  imageUrl String
+  tags     String[]
+
+  stats        ChampionStats?
+  participants MatchParticipant[]
+}
+
+model ChampionStats {
+  id          String   @id @default(cuid())
+  championId  String   @unique
+  champion    Champion @relation(fields: [championId], references: [id])
+  winRate     Float
+  pickRate    Float
+  banRate     Float
+  avgKda      Float
+  avgCs       Float
+  gamesPlayed Int
+  tier        String   @default("A")
+}
+
+model RankedStats {
+  id         String   @id @default(cuid())
+  summonerId String
+  summoner   Summoner @relation(fields: [summonerId], references: [id])
+  queue      String
+  tier       String
+  rank       String
+  lp         Int      @default(0)
+  wins       Int      @default(0)
+  losses     Int      @default(0)
+
+  @@unique([summonerId, queue])
+}
+
+model Match {
+  id        String   @id @default(cuid())
+  gameId    String   @unique
+  gameMode  String   @default("CLASSIC")
+  duration  Int
+  playedAt  DateTime @default(now())
+
+  participants MatchParticipant[]
+}
+
+model MatchParticipant {
+  id         String   @id @default(cuid())
+  matchId    String
+  match      Match    @relation(fields: [matchId], references: [id])
+  summonerId String
+  summoner   Summoner @relation(fields: [summonerId], references: [id])
+  championId String
+  champion   Champion @relation(fields: [championId], references: [id])
+
+  kills      Int
+  deaths     Int
+  assists    Int
+  cs         Int
+  gold       Int
+  items      Int[]
+  win        Boolean
+  lpChange   Int      @default(0)
+  position   String   @default("FILL")
+  damage     Int      @default(0)
+  visionScore Int     @default(0)
+
+  @@unique([matchId, summonerId])
+}
