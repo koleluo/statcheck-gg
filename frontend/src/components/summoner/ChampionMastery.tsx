@@ -1,6 +1,6 @@
 import type { MostPlayedChampion } from '@/types';
 import Card from '@/components/ui/Card';
-import { getChampionImageUrl, getWinRateColor } from '@/utils/formatters';
+import { getWinRateColor } from '@/utils/formatters';
 import { clsx } from 'clsx';
 
 interface Props {
@@ -18,10 +18,10 @@ export default function ChampionMastery({ champions }: Props) {
             <div key={entry.champion.id} className="flex items-center gap-3">
               <div className="h-10 w-10 flex-shrink-0 rounded-lg overflow-hidden border border-surface-border">
                 <img
-                  src={getChampionImageUrl(entry.champion.riotId)}
+                  src={entry.champion.imageUrl}
                   alt={entry.champion.name}
                   className="h-full w-full object-cover"
-                  onError={(e) => { (e.target as HTMLImageElement).src = 'https://via.placeholder.com/40'; }}
+                  onError={(e) => { (e.target as HTMLImageElement).style.opacity = '0'; }}
                 />
               </div>
               <div className="flex-1 min-w-0">

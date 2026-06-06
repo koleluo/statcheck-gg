@@ -9,7 +9,6 @@ import {
   formatRelativeTime,
   formatCs,
   formatNumber,
-  getChampionImageUrl,
   getItemImageUrl,
   getKdaColor,
 } from '@/utils/formatters';
@@ -42,10 +41,10 @@ export default function MatchCard({ participant }: Props) {
 
           <div className="relative h-12 w-12 flex-shrink-0">
             <img
-              src={getChampionImageUrl(champion.riotId)}
+              src={champion.imageUrl}
               alt={champion.name}
               className="h-full w-full rounded-lg object-cover border border-surface-border"
-              onError={(e) => { (e.target as HTMLImageElement).src = 'https://via.placeholder.com/48'; }}
+              onError={(e) => { (e.target as HTMLImageElement).src = `https://ddragon.leagueoflegends.com/cdn/16.11.1/img/champion/${champion.riotId}.png`; }}
             />
             <span className="absolute -bottom-1 -right-1 rounded text-[10px] font-bold bg-surface-primary border border-surface-border px-1 text-gray-300">
               {position.charAt(0)}

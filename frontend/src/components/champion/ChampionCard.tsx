@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { clsx } from 'clsx';
 import type { Champion } from '@/types';
-import { getChampionImageUrl, getWinRateColor } from '@/utils/formatters';
+import { getWinRateColor } from '@/utils/formatters';
 import { CHAMPION_TIER_COLORS } from '@/utils/constants';
 import Badge from '@/components/ui/Badge';
 
@@ -23,10 +23,10 @@ export default function ChampionCard({ champion }: Props) {
     >
       <div className="relative h-32 overflow-hidden">
         <img
-          src={getChampionImageUrl(champion.riotId)}
+          src={champion.imageUrl}
           alt={champion.name}
           className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
-          onError={(e) => { (e.target as HTMLImageElement).src = 'https://via.placeholder.com/200x128'; }}
+          onError={(e) => { (e.target as HTMLImageElement).style.opacity = '0'; }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-surface-card to-transparent" />
         <span

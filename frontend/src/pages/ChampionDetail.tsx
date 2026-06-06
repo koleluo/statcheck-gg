@@ -4,7 +4,7 @@ import { PageLoader } from '@/components/ui/LoadingSpinner';
 import { ErrorCard } from '@/components/ui/Card';
 import Badge from '@/components/ui/Badge';
 import { clsx } from 'clsx';
-import { getChampionImageUrl, getWinRateColor, formatRelativeTime, formatDuration, formatKdaLabel } from '@/utils/formatters';
+import { getWinRateColor, formatRelativeTime, formatDuration, formatKdaLabel } from '@/utils/formatters';
 import { CHAMPION_TIER_COLORS } from '@/utils/constants';
 import {
   RadarChart,
@@ -57,10 +57,10 @@ export default function ChampionDetail() {
           <div className="bg-surface-card border border-surface-border rounded-xl overflow-hidden">
             <div className="relative h-48">
               <img
-                src={getChampionImageUrl(champion.riotId)}
+                src={champion.imageUrl}
                 alt={champion.name}
                 className="w-full h-full object-cover object-top"
-                onError={(e) => { (e.target as HTMLImageElement).src = 'https://via.placeholder.com/400x200'; }}
+                onError={(e) => { (e.target as HTMLImageElement).style.opacity = '0'; }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-surface-card via-transparent to-transparent" />
               <span

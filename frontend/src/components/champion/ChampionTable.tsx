@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { clsx } from 'clsx';
 import type { Champion } from '@/types';
-import { getChampionImageUrl, getWinRateColor } from '@/utils/formatters';
+import { getWinRateColor } from '@/utils/formatters';
 import { CHAMPION_TIER_COLORS } from '@/utils/constants';
 
 interface Props {
@@ -81,10 +81,10 @@ export default function ChampionTable({ champions, onSort, sortField, sortOrder 
                   <div className="flex items-center gap-3">
                     <div className="h-9 w-9 rounded-lg overflow-hidden flex-shrink-0 border border-surface-border">
                       <img
-                        src={getChampionImageUrl(champ.riotId)}
+                        src={champ.imageUrl}
                         alt={champ.name}
                         className="h-full w-full object-cover group-hover:scale-110 transition-transform"
-                        onError={(e) => { (e.target as HTMLImageElement).src = 'https://via.placeholder.com/36'; }}
+                        onError={(e) => { (e.target as HTMLImageElement).style.opacity = '0'; }}
                       />
                     </div>
                     <div>

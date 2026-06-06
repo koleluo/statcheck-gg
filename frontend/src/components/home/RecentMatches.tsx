@@ -1,7 +1,7 @@
 import { useRecentMatches } from '@/hooks/useMatches';
 import { SkeletonCard } from '@/components/ui/LoadingSpinner';
 import { ErrorCard } from '@/components/ui/Card';
-import { formatDuration, formatRelativeTime, getChampionImageUrl } from '@/utils/formatters';
+import { formatDuration, formatRelativeTime } from '@/utils/formatters';
 import { clsx } from 'clsx';
 import { useNavigate } from 'react-router-dom';
 
@@ -44,10 +44,10 @@ export default function RecentMatches() {
               >
                 <div className="h-10 w-10 flex-shrink-0 rounded-lg overflow-hidden border border-surface-border">
                   <img
-                    src={getChampionImageUrl(p.champion.riotId)}
+                    src={p.champion.imageUrl}
                     alt={p.champion.name}
                     className="h-full w-full object-cover"
-                    onError={(e) => { (e.target as HTMLImageElement).src = 'https://via.placeholder.com/40'; }}
+                    onError={(e) => { (e.target as HTMLImageElement).style.opacity = '0'; }}
                   />
                 </div>
                 <div className="flex-1 min-w-0">
