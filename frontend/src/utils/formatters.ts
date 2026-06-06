@@ -81,5 +81,5 @@ export function getItemImageUrl(itemId: number): string {
 }
 
 export function getTierEmblemUrl(tier: string): string {
-  return `https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-shared-components/global/default/images/ranked-emblem/emblem-${tier.toLowerCase()}.png`;
+  return `/ranks/${tier.toLowerCase()}.png`;
 }
