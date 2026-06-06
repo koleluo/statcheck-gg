@@ -117,10 +117,10 @@ export function getSummonerByPuuid(puuid: string): Promise<RiotSummoner> {
   );
 }
 
-export function getRankedStats(summonerId: string): Promise<RiotRankedEntry[]> {
+export function getRankedStats(puuid: string): Promise<RiotRankedEntry[]> {
   return withRetry(() =>
     platform
-      .get<RiotRankedEntry[]>(`/lol/league/v4/entries/by-summoner/${summonerId}`)
+      .get<RiotRankedEntry[]>(`/lol/league/v4/entries/by-puuid/${puuid}`)
       .then((r) => r.data)
   );
 }

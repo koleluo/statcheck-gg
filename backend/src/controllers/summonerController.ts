@@ -67,7 +67,6 @@ async function syncFromRiot(searchName: string): Promise<string> {
       name: displayName,
       level: riot.summonerLevel,
       profileIcon: riot.profileIconId,
-      riotSummonerId: riot.id,
     },
     create: {
       name: displayName,
@@ -75,12 +74,11 @@ async function syncFromRiot(searchName: string): Promise<string> {
       profileIcon: riot.profileIconId,
       region: (process.env.RIOT_PLATFORM ?? 'na1').toUpperCase(),
       puuid: riot.puuid,
-      riotSummonerId: riot.id,
     },
   });
 
-  // Sync ranked stats
-  const rankedEntries = await riotApi.getRankedStats(riot.id);
+  // Sync ranked stats via PUUID (Riot removed summonerId from summoner v4 response)
+  const rankedEntries = await riotApi.getRankedStats(riot.puuid);
   await Promise.all(
     rankedEntries.map((entry) =>
       prisma.rankedStats.upsert({
