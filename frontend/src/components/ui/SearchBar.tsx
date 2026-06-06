@@ -119,10 +119,10 @@ export default function SearchBar({ size = 'lg', placeholder = 'Search summoner 
                 >
                   <div className="h-8 w-8 rounded-full bg-surface-border flex-shrink-0 overflow-hidden">
                     <img
-                      src={`https://ddragon.leagueoflegends.com/cdn/14.1.1/img/profileicon/${s.profileIcon}.png`}
+                      src={`https://ddragon.leagueoflegends.com/cdn/16.11.1/img/profileicon/${s.profileIcon}.png`}
                       alt={s.name}
                       className="h-full w-full object-cover"
-                      onError={(e) => { (e.target as HTMLImageElement).src = 'https://ddragon.leagueoflegends.com/cdn/14.1.1/img/profileicon/1.png'; }}
+                      onError={(e) => { (e.target as HTMLImageElement).src = 'https://ddragon.leagueoflegends.com/cdn/16.11.1/img/profileicon/1.png'; }}
                     />
                   </div>
                   <div>

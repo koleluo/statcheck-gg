@@ -5,7 +5,7 @@
 @layer base {
   * {
     scrollbar-width: thin;
-    scrollbar-color: #2a3f6f transparent;
+    scrollbar-color: #383838 transparent;
   }
 
   *::-webkit-scrollbar {
@@ -18,7 +18,7 @@
   }
 
   *::-webkit-scrollbar-thumb {
-    background-color: #2a3f6f;
+    background-color: #383838;
     border-radius: 3px;
   }
 
@@ -35,5 +35,17 @@
 
   .stat-bar-fill {
     @apply h-full rounded-full transition-all duration-500;
+  }
+
+  .opgg-card {
+    @apply bg-surface-card border border-surface-border rounded-lg;
+  }
+
+  .tab-active {
+    @apply text-white border-b-2 border-brand-500;
+  }
+
+  .tab-inactive {
+    @apply text-gray-500 border-b-2 border-transparent hover:text-gray-300;
   }
 }

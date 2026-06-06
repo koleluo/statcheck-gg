@@ -73,11 +73,11 @@ export function getChampionImageUrl(riotId: string): string {
 }
 
 export function getProfileIconUrl(iconId: number): string {
-  return `https://ddragon.leagueoflegends.com/cdn/14.1.1/img/profileicon/${iconId}.png`;
+  return `https://ddragon.leagueoflegends.com/cdn/16.11.1/img/profileicon/${iconId}.png`;
 }
 
 export function getItemImageUrl(itemId: number): string {
-  return `https://ddragon.leagueoflegends.com/cdn/14.1.1/img/item/${itemId}.png`;
+  return `https://ddragon.leagueoflegends.com/cdn/16.11.1/img/item/${itemId}.png`;
 }
 
 export function getTierEmblemUrl(tier: string): string {

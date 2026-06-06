@@ -1,6 +1,4 @@
 import type { MostPlayedChampion } from '@/types';
-import Card from '@/components/ui/Card';
-import { getWinRateColor } from '@/utils/formatters';
 import { clsx } from 'clsx';
 
 interface Props {
@@ -9,14 +7,17 @@ interface Props {
 
 export default function ChampionMastery({ champions }: Props) {
   return (
-    <Card className="p-4">
-      <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">Most Played</h3>
-      <div className="space-y-3">
+    <div className="bg-surface-card border border-surface-border rounded-lg overflow-hidden">
+      <div className="px-4 py-2 bg-[#1e1e1e] border-b border-surface-border">
+        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Most Played</span>
+      </div>
+      <div className="divide-y divide-surface-border">
         {champions.map((entry) => {
-          const wrColor = getWinRateColor(entry.winRate);
+          const wr = entry.winRate;
+          const isPositive = wr >= 50;
           return (
-            <div key={entry.champion.id} className="flex items-center gap-3">
-              <div className="h-10 w-10 flex-shrink-0 rounded-lg overflow-hidden border border-surface-border">
+            <div key={entry.champion.id} className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-hover transition-colors">
+              <div className="h-9 w-9 flex-shrink-0 rounded-full overflow-hidden border border-surface-border">
                 <img
                   src={entry.champion.imageUrl}
                   alt={entry.champion.name}
@@ -25,28 +26,19 @@ export default function ChampionMastery({ champions }: Props) {
                 />
               </div>
               <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-sm font-medium text-white truncate">{entry.champion.name}</span>
-                  <span className={clsx('text-xs font-semibold', wrColor)}>{entry.winRate}%</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="flex-1 h-1.5 rounded-full bg-surface-border overflow-hidden">
-                    <div
-                      className={clsx('h-full rounded-full', entry.winRate >= 50 ? 'bg-emerald-500' : 'bg-red-500')}
-                      style={{ width: `${entry.winRate}%` }}
-                    />
-                  </div>
-                  <span className="text-xs text-gray-500 flex-shrink-0">{entry.games}G</span>
-                </div>
+                <div className="text-xs font-semibold text-white truncate">{entry.champion.name}</div>
+                <div className="text-[11px] text-gray-600 mt-0.5">{entry.games}G</div>
               </div>
-              <div className="text-right flex-shrink-0">
-                <div className="text-xs font-semibold text-blue-400">{entry.kda}</div>
-                <div className="text-xs text-gray-500">KDA</div>
+              <div className="flex flex-col items-end gap-0.5 flex-shrink-0">
+                <span className={clsx('text-xs font-bold', isPositive ? 'text-[#4171d6]' : 'text-[#e84057]')}>
+                  {wr}%
+                </span>
+                <span className="text-[11px] text-gray-600">{entry.kda} KDA</span>
               </div>
             </div>
           );
         })}
       </div>
-    </Card>
+    </div>
   );
 }

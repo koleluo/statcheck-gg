@@ -1,8 +1,8 @@
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { clsx } from 'clsx';
 import SearchBar from '@/components/ui/SearchBar';
 
-const navLinks = [
+const tabs = [
   { to: '/', label: 'Home' },
   { to: '/champions', label: 'Champions' },
 ];
@@ -12,47 +12,62 @@ export default function Navbar() {
   const isHome = location.pathname === '/';
 
   return (
-    <header className="sticky top-0 z-40 border-b border-surface-border bg-surface-primary/95 backdrop-blur-sm">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-14 items-center gap-6">
-          <Link to="/" className="flex items-center gap-2 flex-shrink-0">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
-                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-              </svg>
-            </div>
-            <span className="text-lg font-bold text-white tracking-tight">StatCheck</span>
+    <header className="sticky top-0 z-40">
+      {/* Top bar */}
+      <div className="bg-[#111111] border-b border-surface-border">
+        <div className="mx-auto max-w-7xl px-4 h-12 flex items-center gap-4">
+          <Link to="/" className="flex items-center gap-0.5 flex-shrink-0 select-none">
+            <span className="text-lg font-black tracking-tight text-white">STAT</span>
+            <span className="text-lg font-black tracking-tight text-brand-500">CHECK</span>
+            <span className="text-lg font-black tracking-tight text-gray-500">.GG</span>
           </Link>
 
-          <nav className="hidden sm:flex items-center gap-1">
-            {navLinks.map((link) => (
-              <Link
-                key={link.to}
-                to={link.to}
-                className={clsx(
-                  'px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
-                  location.pathname === link.to
-                    ? 'bg-brand-500/20 text-brand-100'
-                    : 'text-gray-400 hover:text-white hover:bg-surface-hover'
-                )}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded bg-surface-card border border-surface-border text-xs text-gray-400 ml-2 select-none">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+              <path d="M2 12h20" />
+            </svg>
+            League of Legends
+            <svg width="10" height="10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
 
           {!isHome && (
-            <div className="flex-1 max-w-md">
-              <SearchBar size="sm" placeholder="Name#TAG..." />
+            <div className="flex-1 max-w-sm">
+              <SearchBar size="sm" placeholder="Game name + #NA1" />
             </div>
           )}
 
           <div className="ml-auto flex items-center gap-2">
-            <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-surface-card px-3 py-1 text-xs text-gray-400 border border-surface-border">
+            <div className="flex items-center gap-1.5 rounded px-2.5 py-1 text-xs text-gray-400 border border-surface-border bg-surface-card">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              NA1
-            </span>
+              <span>NA1</span>
+            </div>
           </div>
+        </div>
+      </div>
+
+      {/* Secondary nav */}
+      <div className="bg-[#141414] border-b border-surface-border">
+        <div className="mx-auto max-w-7xl px-4">
+          <nav className="flex items-end gap-0 h-10">
+            {tabs.map((tab) => (
+              <Link
+                key={tab.to}
+                to={tab.to}
+                className={clsx(
+                  'px-5 h-full flex items-center text-sm font-medium transition-colors border-b-2',
+                  location.pathname === tab.to
+                    ? 'text-white border-brand-500'
+                    : 'text-gray-500 border-transparent hover:text-gray-300 hover:border-gray-600'
+                )}
+              >
+                {tab.label}
+              </Link>
+            ))}
+          </nav>
         </div>
       </div>
     </header>

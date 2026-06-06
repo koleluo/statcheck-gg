@@ -1,13 +1,10 @@
 import { useState } from 'react';
 import { clsx } from 'clsx';
 import type { MatchParticipant } from '@/types';
-import { WinBadge } from '@/components/ui/Badge';
 import {
   formatDuration,
-  formatKdaLabel,
   formatKda,
   formatRelativeTime,
-  formatCs,
   formatNumber,
   getItemImageUrl,
   getKdaColor,
@@ -17,69 +14,100 @@ interface Props {
   participant: MatchParticipant;
 }
 
+const POSITION_ABBR: Record<string, string> = {
+  TOP: 'Top',
+  JUNGLE: 'Jg',
+  MID: 'Mid',
+  BOT: 'Bot',
+  SUPPORT: 'Sup',
+  FILL: '—',
+};
+
+const GAME_MODE_LABELS: Record<string, string> = {
+  CLASSIC: 'Ranked',
+  ARAM: 'ARAM',
+  URF: 'URF',
+  CHERRY: 'Arena',
+  NEXUSBLITZ: 'Nexus Blitz',
+};
+
 export default function MatchCard({ participant }: Props) {
   const [expanded, setExpanded] = useState(false);
-  const { match, champion, kills, deaths, assists, cs, gold, items, win, lpChange, damage, visionScore, position } = participant;
+  const { match, champion, kills, deaths, assists, cs, gold, items, win, damage, visionScore, position } = participant;
   const kda = parseFloat(formatKda(kills, deaths, assists));
   const kdaColor = getKdaColor(kda);
+  const gameLabel = GAME_MODE_LABELS[match.gameMode] ?? match.gameMode;
 
   return (
     <div
       className={clsx(
-        'rounded-lg border transition-all',
-        win
-          ? 'bg-win-bg border-win/30 hover:border-win/60'
-          : 'bg-loss-bg border-loss/30 hover:border-loss/60'
+        'rounded-lg overflow-hidden border transition-all',
+        win ? 'border-[#2a3a58] bg-win-bg' : 'border-[#3a2530] bg-loss-bg'
       )}
     >
       <div
-        className="p-3 sm:p-4 cursor-pointer select-none"
+        className="flex items-center cursor-pointer select-none"
         onClick={() => setExpanded((e) => !e)}
       >
-        <div className="flex items-center gap-3 sm:gap-4">
-          <div className={clsx('w-1 self-stretch rounded-full flex-shrink-0', win ? 'bg-win' : 'bg-loss')} />
+        {/* Colored left strip */}
+        <div className={clsx('w-1 self-stretch flex-shrink-0', win ? 'bg-win' : 'bg-loss')} />
 
-          <div className="relative h-12 w-12 flex-shrink-0">
-            <img
-              src={champion.imageUrl}
-              alt={champion.name}
-              className="h-full w-full rounded-lg object-cover border border-surface-border"
-              onError={(e) => { (e.target as HTMLImageElement).src = `https://ddragon.leagueoflegends.com/cdn/16.11.1/img/champion/${champion.riotId}.png`; }}
-            />
-            <span className="absolute -bottom-1 -right-1 rounded text-[10px] font-bold bg-surface-primary border border-surface-border px-1 text-gray-300">
-              {position.charAt(0)}
-            </span>
-          </div>
-
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-0.5">
-              <WinBadge win={win} />
-              <span className="text-xs text-gray-400">{formatRelativeTime(match.playedAt)}</span>
-              <span className="text-xs text-gray-500">{formatDuration(match.duration)}</span>
+        <div className="flex-1 flex items-center gap-3 p-3">
+          {/* Champion icon */}
+          <div className="relative flex-shrink-0">
+            <div className="h-12 w-12 rounded-full overflow-hidden border-2" style={{ borderColor: win ? '#4171d6' : '#e84057' }}>
+              <img
+                src={champion.imageUrl}
+                alt={champion.name}
+                className="h-full w-full object-cover"
+                onError={(e) => { (e.target as HTMLImageElement).src = `https://ddragon.leagueoflegends.com/cdn/16.11.1/img/champion/${champion.riotId}.png`; }}
+              />
             </div>
-            <div className="text-sm font-medium text-white truncate">{champion.name}</div>
-          </div>
-
-          <div className="hidden sm:flex flex-col items-center">
-            <span className={clsx('text-lg font-bold', kdaColor)}>
-              {kda.toFixed(2)}
+            <span className="absolute -bottom-0.5 -right-0.5 rounded-full text-[9px] font-bold bg-[#111] border border-[#383838] px-1 text-gray-400 leading-tight">
+              {POSITION_ABBR[position] ?? '—'}
             </span>
-            <span className="text-xs text-gray-400">{formatKdaLabel(kills, deaths, assists)}</span>
           </div>
 
-          <div className="hidden md:flex flex-col items-center text-sm">
-            <span className="text-gray-300 font-medium">{formatCs(cs, match.duration)}</span>
-            <span className="text-xs text-gray-500">CS</span>
+          {/* Game info + result */}
+          <div className="flex-shrink-0 w-24">
+            <div className={clsx('text-xs font-bold', win ? 'text-[#4171d6]' : 'text-[#e84057]')}>
+              {win ? 'Victory' : 'Defeat'}
+            </div>
+            <div className="text-[11px] text-gray-500 mt-0.5">{gameLabel}</div>
+            <div className="text-[11px] text-gray-600 mt-0.5">{formatDuration(match.duration)}</div>
+            <div className="text-[11px] text-gray-700 mt-0.5">{formatRelativeTime(match.playedAt)}</div>
           </div>
 
-          <div className="hidden md:flex flex-col items-center text-sm">
-            <span className="text-yellow-400 font-medium">{formatNumber(gold)}</span>
-            <span className="text-xs text-gray-500">Gold</span>
+          {/* KDA */}
+          <div className="flex-shrink-0 w-28">
+            <div className="text-sm font-bold text-white tabular-nums">
+              {kills} / <span className="text-[#e84057]">{deaths}</span> / {assists}
+            </div>
+            <div className={clsx('text-xs mt-0.5 font-semibold', kdaColor)}>
+              {kda.toFixed(2)}:1 KDA
+            </div>
           </div>
 
-          <div className="flex items-center gap-1">
-            {items.slice(0, 6).map((item, i) => (
-              <div key={i} className="h-6 w-6 rounded bg-surface-border overflow-hidden flex-shrink-0">
+          {/* CS / Gold */}
+          <div className="hidden sm:flex flex-col gap-0.5 flex-shrink-0 w-20">
+            <div className="text-xs text-gray-400">
+              <span className="text-white font-medium">{cs}</span> CS
+            </div>
+            <div className="text-xs text-gray-400">
+              <span className="text-yellow-400 font-medium">{formatNumber(gold)}</span> gold
+            </div>
+          </div>
+
+          {/* Items */}
+          <div className="flex items-center gap-1 flex-1 justify-end">
+            {[...items.slice(0, 6), 0].map((item, i) => (
+              <div
+                key={i}
+                className={clsx(
+                  'h-7 w-7 rounded overflow-hidden flex-shrink-0',
+                  item > 0 ? 'bg-[#111]' : 'bg-[#1a1a1a] border border-[#2a2a2a]'
+                )}
+              >
                 {item > 0 && (
                   <img
                     src={getItemImageUrl(item)}
@@ -90,50 +118,24 @@ export default function MatchCard({ participant }: Props) {
                 )}
               </div>
             ))}
-          </div>
 
-          <div className="flex flex-col items-end flex-shrink-0">
-            <span className={clsx('text-sm font-semibold', lpChange > 0 ? 'text-emerald-400' : 'text-red-400')}>
-              {lpChange > 0 ? `+${lpChange}` : lpChange} LP
-            </span>
             <svg
-              className={clsx('text-gray-500 mt-1 transition-transform', expanded && 'rotate-180')}
-              width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              className={clsx('text-gray-600 ml-1 transition-transform flex-shrink-0', expanded && 'rotate-180')}
+              width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
             </svg>
           </div>
         </div>
-
-        <div className="sm:hidden flex items-center gap-4 mt-2 pl-7">
-          <span className={clsx('text-sm font-bold', kdaColor)}>{kda.toFixed(2)} KDA</span>
-          <span className="text-sm text-gray-400">{formatKdaLabel(kills, deaths, assists)}</span>
-          <span className="text-sm text-gray-400">{cs} CS</span>
-        </div>
       </div>
 
       {expanded && (
-        <div className="border-t border-surface-border/50 px-4 py-3 animate-fade-in">
+        <div className={clsx('border-t px-4 py-3 animate-fade-in', win ? 'border-[#2a3a58]' : 'border-[#3a2530]')}>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <StatBox label="Damage" value={formatNumber(damage)} />
+            <StatBox label="Damage" value={formatNumber(damage)} color="text-[#e84057]" />
             <StatBox label="Vision Score" value={visionScore.toString()} />
             <StatBox label="CS/min" value={(cs / (match.duration / 60)).toFixed(1)} />
-            <StatBox label="Gold" value={formatNumber(gold)} />
-          </div>
-          <div className="mt-3 flex items-center gap-1">
-            <span className="text-xs text-gray-500 mr-1">Items:</span>
-            {items.map((item, i) => (
-              <div key={i} className="h-8 w-8 rounded bg-surface-border overflow-hidden">
-                {item > 0 && (
-                  <img
-                    src={getItemImageUrl(item)}
-                    alt={`Item ${item}`}
-                    className="h-full w-full object-cover"
-                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                  />
-                )}
-              </div>
-            ))}
+            <StatBox label="Gold" value={formatNumber(gold)} color="text-yellow-400" />
           </div>
         </div>
       )}
@@ -141,11 +143,11 @@ export default function MatchCard({ participant }: Props) {
   );
 }
 
-function StatBox({ label, value }: { label: string; value: string }) {
+function StatBox({ label, value, color }: { label: string; value: string; color?: string }) {
   return (
-    <div className="bg-surface-primary/50 rounded-lg p-2.5 text-center">
-      <div className="text-base font-semibold text-white">{value}</div>
-      <div className="text-xs text-gray-500 mt-0.5">{label}</div>
+    <div className="bg-[#111] rounded-lg p-2.5 text-center">
+      <div className={clsx('text-sm font-bold', color ?? 'text-white')}>{value}</div>
+      <div className="text-[11px] text-gray-600 mt-0.5">{label}</div>
     </div>
   );
 }
