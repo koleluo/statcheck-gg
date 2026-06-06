@@ -5,11 +5,11 @@
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "db:generate": "prisma generate",
-    "db:push": "prisma db push",
-    "db:migrate": "prisma migrate dev",
+    "db:generate": "prisma@5 generate",
+    "db:push": "prisma@5 db push",
+    "db:migrate": "prisma@5 migrate dev",
     "db:seed": "ts-node prisma/seed.ts",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma@5 studio"
   },
   "dependencies": {
     "@prisma/client": "^5.7.0",
