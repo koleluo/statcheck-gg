@@ -15,7 +15,7 @@ import { clsx } from 'clsx';
 export default function SummonerProfile() {
   const { name } = useParams<{ name: string }>();
   const decodedName = name ? decodeURIComponent(name) : '';
-  const { data: summoner, isLoading, isError, error } = useSummoner(decodedName);
+  const { data: summoner, isLoading, isError, error, forceRefresh } = useSummoner(decodedName);
   const { addSearch } = useSearchHistory();
 
   useEffect(() => {
@@ -57,7 +57,7 @@ export default function SummonerProfile() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
-      <SummonerHeader summoner={summoner} />
+      <SummonerHeader summoner={summoner} onRefresh={forceRefresh} />
 
       <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[

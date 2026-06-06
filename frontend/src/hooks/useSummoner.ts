@@ -1,10 +1,11 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import type { Summoner, ApiResponse, PaginatedResponse } from '@/types';
 
-async function fetchSummoner(name: string): Promise<Summoner> {
+async function fetchSummoner(name: string, force = false): Promise<Summoner> {
   const { data } = await axios.get<ApiResponse<Summoner>>(
-    `/api/summoners/${encodeURIComponent(name)}`
+    `/api/summoners/${encodeURIComponent(name)}`,
+    { params: force ? { force: 'true' } : {} }
   );
   return data.data;
 }
@@ -24,13 +25,26 @@ async function searchSummoners(query: string): Promise<Summoner[]> {
 }
 
 export function useSummoner(name: string | undefined) {
-  return useQuery({
+  const queryClient = useQueryClient();
+
+  const query = useQuery({
     queryKey: ['summoner', name],
     queryFn: () => fetchSummoner(name!),
     enabled: !!name,
     staleTime: 60 * 1000,
     retry: 1,
   });
+
+  const forceRefresh = async () => {
+    if (!name) return;
+    await queryClient.invalidateQueries({ queryKey: ['summoner', name] });
+    return queryClient.fetchQuery({
+      queryKey: ['summoner', name],
+      queryFn: () => fetchSummoner(name, true),
+    });
+  };
+
+  return { ...query, forceRefresh };
 }
 
 export function useAllSummoners(page = 1, limit = 20) {

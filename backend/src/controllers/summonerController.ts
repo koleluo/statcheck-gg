@@ -203,7 +203,9 @@ export async function getSummonerByName(req: Request, res: Response, next: NextF
   try {
     const decodedName = decodeURIComponent(req.params.name);
 
-    // Try cache first
+    const force = req.query.force === 'true';
+
+    // Try cache first — skip if force refresh or data looks incomplete
     const cached = await prisma.summoner.findFirst({
       where: { name: { equals: decodedName, mode: 'insensitive' } },
       include: {
@@ -216,7 +218,8 @@ export async function getSummonerByName(req: Request, res: Response, next: NextF
       },
     });
 
-    if (cached && !isStale(cached.updatedAt)) {
+    const cacheValid = cached && !isStale(cached.updatedAt) && cached.participants.length > 0;
+    if (cacheValid && !force) {
       return res.json({ data: { ...cached, mostPlayed: buildMostPlayed(cached.participants) } });
     }
 

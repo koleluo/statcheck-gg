@@ -5,9 +5,10 @@ import { useFavoriteSummoners } from '@/hooks/useLocalStorage';
 
 interface Props {
   summoner: Summoner;
+  onRefresh?: () => void;
 }
 
-export default function SummonerHeader({ summoner }: Props) {
+export default function SummonerHeader({ summoner, onRefresh }: Props) {
   const soloRanked = summoner.rankedStats.find((r) => r.queue === 'RANKED_SOLO_5x5');
   const { toggleFavorite, isFavorite } = useFavoriteSummoners();
   const favorite = isFavorite(summoner.name);
@@ -55,7 +56,10 @@ export default function SummonerHeader({ summoner }: Props) {
           </div>
         </div>
 
-        <button className="flex-shrink-0 rounded-lg bg-brand-500 hover:bg-brand-600 px-4 py-2 text-sm font-medium text-white transition-colors">
+        <button
+          onClick={onRefresh}
+          className="flex-shrink-0 rounded-lg bg-brand-500 hover:bg-brand-600 px-4 py-2 text-sm font-medium text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
           Update
         </button>
       </div>
