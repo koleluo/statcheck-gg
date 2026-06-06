@@ -125,11 +125,11 @@ export function getRankedStats(summonerId: string): Promise<RiotRankedEntry[]> {
   );
 }
 
-export function getMatchIds(puuid: string, count = 10, queue = 420): Promise<string[]> {
+export function getMatchIds(puuid: string, count = 10, queue?: number): Promise<string[]> {
   return withRetry(() =>
     regional
       .get<string[]>(`/lol/match/v5/matches/by-puuid/${puuid}/ids`, {
-        params: { start: 0, count, queue },
+        params: { start: 0, count, ...(queue !== undefined && { queue }) },
       })
       .then((r) => r.data)
   );

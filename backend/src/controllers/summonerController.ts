@@ -105,8 +105,11 @@ async function syncFromRiot(searchName: string): Promise<string> {
     )
   );
 
-  // Sync recent ranked solo match history
-  const matchIds = await riotApi.getMatchIds(riot.puuid, 10, 420);
+  // Fetch last 10 ranked solo games, fall back to any queue if none found
+  let matchIds = await riotApi.getMatchIds(riot.puuid, 10, 420);
+  if (matchIds.length === 0) {
+    matchIds = await riotApi.getMatchIds(riot.puuid, 10);
+  }
   const championIdMap = await getChampionIdMap();
 
   for (const matchId of matchIds) {
