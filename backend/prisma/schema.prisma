@@ -8,13 +8,15 @@ datasource db {
 }
 
 model Summoner {
-  id          String   @id @default(cuid())
-  name        String   @unique
-  level       Int      @default(1)
-  profileIcon Int      @default(1)
-  region      String   @default("NA1")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id             String   @id @default(cuid())
+  name           String   @unique
+  level          Int      @default(1)
+  profileIcon    Int      @default(1)
+  region         String   @default("NA1")
+  puuid          String?  @unique
+  riotSummonerId String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   rankedStats  RankedStats[]
   participants MatchParticipant[]
