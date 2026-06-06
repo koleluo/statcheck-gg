@@ -2,6 +2,12 @@
 
 A full-stack League of Legends stats platform inspired by OP.GG. Search any NA summoner and get live ranked stats, match history, and champion performance pulled directly from the Riot API — with a 5-minute PostgreSQL cache to keep responses fast.
 
+## Screenshots
+
+![Home page](screenshots/home.png)
+
+![Summoner profile](screenshots/profile.png)
+
 ## Tech Stack
 
 | Layer | Technology |
