@@ -46,20 +46,31 @@ function buildMostPlayed(participants: Array<{ championId: string; win: boolean;
 }
 
 async function syncFromRiot(searchName: string): Promise<string> {
-  // Fetch canonical summoner data from Riot
-  const riot = await riotApi.getSummonerByName(searchName);
+  // Support both "Name#TAG" (Riot ID) and legacy summoner name
+  let riot: riotApi.RiotSummoner;
+  let displayName: string;
 
-  // Upsert summoner record
+  if (searchName.includes('#')) {
+    const [gameName, tagLine] = searchName.split('#');
+    const account = await riotApi.getAccountByRiotId(gameName, tagLine);
+    riot = await riotApi.getSummonerByPuuid(account.puuid);
+    displayName = `${gameName}#${tagLine}`;
+  } else {
+    riot = await riotApi.getSummonerByName(searchName);
+    displayName = riot.name;
+  }
+
+  // Upsert summoner — key on puuid so renames don't create duplicates
   const summoner = await prisma.summoner.upsert({
-    where: { name: riot.name },
+    where: { puuid: riot.puuid },
     update: {
+      name: displayName,
       level: riot.summonerLevel,
       profileIcon: riot.profileIconId,
-      puuid: riot.puuid,
       riotSummonerId: riot.id,
     },
     create: {
-      name: riot.name,
+      name: displayName,
       level: riot.summonerLevel,
       profileIcon: riot.profileIconId,
       region: (process.env.RIOT_PLATFORM ?? 'na1').toUpperCase(),

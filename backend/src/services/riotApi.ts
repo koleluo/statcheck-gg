@@ -87,6 +87,20 @@ export interface RiotMatch {
   };
 }
 
+export interface RiotAccount {
+  puuid: string;
+  gameName: string;
+  tagLine: string;
+}
+
+export function getAccountByRiotId(gameName: string, tagLine: string): Promise<RiotAccount> {
+  return withRetry(() =>
+    regional
+      .get<RiotAccount>(`/riot/account/v1/accounts/by-riot-id/${encodeURIComponent(gameName)}/${encodeURIComponent(tagLine)}`)
+      .then((r) => r.data)
+  );
+}
+
 export function getSummonerByName(name: string): Promise<RiotSummoner> {
   return withRetry(() =>
     platform

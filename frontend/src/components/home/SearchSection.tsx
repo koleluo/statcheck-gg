@@ -29,7 +29,7 @@ export default function SearchSection() {
           Search for any summoner to view stats, match history, champion mastery, and more.
         </p>
 
-        <SearchBar size="lg" />
+        <SearchBar size="lg" placeholder="Search by Name#TAG (e.g. Doublelift#NA1)" />
 
         {(history.length > 0 || favorites.length > 0) && (
           <div className="mt-5 flex flex-wrap justify-center gap-3">

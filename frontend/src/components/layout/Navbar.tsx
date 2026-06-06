@@ -43,7 +43,7 @@ export default function Navbar() {
 
           {!isHome && (
             <div className="flex-1 max-w-md">
-              <SearchBar size="sm" placeholder="Search summoner..." />
+              <SearchBar size="sm" placeholder="Name#TAG..." />
             </div>
           )}
 
